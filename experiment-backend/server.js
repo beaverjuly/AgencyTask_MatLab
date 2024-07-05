@@ -13,9 +13,7 @@ app.use(bodyParser.json());
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, {
-  // These options are no longer needed
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
+  // Deprecated options are removed
 });
 
 const db = mongoose.connection;
@@ -27,7 +25,12 @@ db.once('open', function() {
 // Define a schema and model for the data
 const dataSchema = new mongoose.Schema({
   subjectID: String,
-  trial: Object
+  trialIndex: Number,
+  tokens: Number,
+  trialType: String,
+  studyId: String,
+  sessionId: String,
+  docId: String
 });
 
 const Data = mongoose.model('Data', dataSchema);
@@ -48,5 +51,6 @@ app.post('/save-data', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
 
 
