@@ -120,7 +120,7 @@ class IslandLotteries {
         // Wait for participant's choice
         this.waitForBanditSelection();
       } else {
-        // Computer chooses bandit
+        // Computer chooses bandit using coin flip logic
         this.computerSelectsBandit();
       }
     }
@@ -143,11 +143,27 @@ class IslandLotteries {
     }
   
     computerSelectsBandit() {
-      // Logic for computer to choose a bandit
-      this.selectedBandit = Math.random() > 0.5 ? this.leftBandit : this.rightBandit;
-      this.trialData.banditResp = this.selectedBandit === this.leftBandit ? 1 : 2;
+      // Logic for computer to choose a bandit using coin flip
+      let coin1 = this.getCoinTexture(this.leftBandit);
+      let coin2 = this.getCoinTexture(this.rightBandit);
+      let finalSide = Math.random() > 0.5 ? coin1 : coin2;
   
-      this.showOutcome();
+      this.displayCoinFlip(coin1, coin2, finalSide, () => {
+        this.selectedBandit = finalSide === coin1 ? this.leftBandit : this.rightBandit;
+        this.trialData.banditResp = this.selectedBandit === this.leftBandit ? 1 : 2;
+        this.showOutcome();
+      });
+    }
+  
+    getCoinTexture(bandit) {
+      // Placeholder: Implement logic to get the texture for the bandit coin
+      return `coin_${bandit}`;
+    }
+  
+    displayCoinFlip(coin1, coin2, finalSide, callback) {
+      // Placeholder: Implement the coin flip animation and call the callback once done
+      console.log(`Flipping coin between ${coin1} and ${coin2}, result: ${finalSide}`);
+      setTimeout(callback, 1000); // Simulate the coin flip duration
     }
   
     showOutcome() {
@@ -258,5 +274,7 @@ class IslandLotteries {
   }
   
   export default IslandLotteries;
+  
+  
   
   
