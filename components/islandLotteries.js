@@ -164,12 +164,63 @@ class IslandLotteries {
         </div>
       `;
   
+      // Perform the calculations and update the trial data
+      this.performCalculations();
+  
       // Save data and proceed to the next trial
       this.trialData.reward = this.reward;
       this.trialData.tokensEarned = this.tokens + (this.reward * 10);
       this.saveData(this.trialData, () => {
         this.callback(this.tokens);
       });
+    }
+  
+    performCalculations() {
+      const leftBanditValue = this.getBanditValue(this.leftBandit);
+      const rightBanditValue = this.getBanditValue(this.rightBandit);
+  
+      // Calculate EV_choose and EV_comp
+      const EV_choose = Math.max(leftBanditValue, rightBanditValue);
+      const EV_comp = 0.5 * (leftBanditValue + rightBanditValue) + 0.1 * this.tokenOffer;
+  
+      this.trialData.EV_choose = EV_choose;
+      this.trialData.EV_comp = EV_comp;
+  
+      // Record EV of selected and non-selected actions
+      if (this.agency === 1) { // opted to choose
+        this.trialData.EV_selectedAction = EV_choose;
+        this.trialData.EV_nonselectedAction = EV_comp;
+      } else { // accepted offer
+        this.trialData.EV_selectedAction = EV_comp;
+        this.trialData.EV_nonselectedAction = EV_choose;
+      }
+  
+      this.trialData.EV_selectedMinusNonselected = this.trialData.EV_selectedAction - this.trialData.EV_nonselectedAction;
+  
+      // Determine optimality
+      if (EV_choose > EV_comp) {
+        this.trialData.optimalToChoose = 1;
+        this.trialData.optimal = this.agency === 1 ? 1 : -1;
+      } else if (EV_choose < EV_comp) {
+        this.trialData.optimalToChoose = 0;
+        this.trialData.optimal = this.agency === 0 ? 1 : -1;
+      } else {
+        this.trialData.optimal = 0;
+      }
+  
+      // Update value estimate of selected bandit
+      this.updateValueEstimate(this.selectedBandit);
+    }
+  
+    getBanditValue(bandit) {
+      // Retrieve the value estimate of the bandit from some stored data
+      // This is a placeholder implementation
+      return Math.random() * 10; // Example value
+    }
+  
+    updateValueEstimate(bandit) {
+      // Update the value estimate of the selected bandit
+      // This is a placeholder implementation
     }
   
     saveData(data, callback) {

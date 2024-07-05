@@ -1,3 +1,5 @@
+// main.js
+
 console.log("main.js is loaded");
 
 import Checker from "./components/checker.js";
@@ -91,12 +93,13 @@ function runIslandTrials(docId, tokens, prolificpId, studyId, sessionId) {
     } else {
       console.log("Completed all island trials");
       // After completing all island trials
-      new IslandChoiceKnowledge(docId, function () {
+      new IslandChoiceKnowledge(docId, trialIndex, easyChangePoints.concat(hardChangePoints), function () {
         new TokensQuestion(docId, prolificpId, studyId, sessionId, updatedTokens);
       });
     }
   });
 }
+
 
 
 
