@@ -13,8 +13,9 @@ app.use(bodyParser.json());
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+  // These options are no longer needed
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
@@ -47,4 +48,5 @@ app.post('/save-data', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
 
